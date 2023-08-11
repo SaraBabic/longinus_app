@@ -8,6 +8,7 @@ import {Text,
 } from 'react-native';
 
 const HomeScreen = ({navigation}) => {
+  const { token } = route.params;
     return (
         <View style={styles.container}>
           

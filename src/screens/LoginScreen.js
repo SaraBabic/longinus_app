@@ -1,56 +1,45 @@
-import React, {useContext, useState} from 'react';
-import {
-  Button,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  Pressable,
-  Image,
-} from 'react-native';
-// import {AuthContext} from '../context/AuthContext';
+import React, { useState } from 'react';
+import { View, TextInput, Button, StyleSheet } from 'react-native';
+import axios from 'axios';
 
-const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  // const {isLoading, login} = useContext(AuthContext);
+const LoginScreen = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        'https://05f9-46-40-7-116.ngrok-free.app/user/login?_format=json', // Replace with the correct endpoint
+        {
+          name: username,
+          pass: password,
+        }
+      );
+
+      if (response.data && response.data.csrf_token) {
+        const token = response.data.csrf_token;
+        // TODO: Store the token and handle navigation to the next screen
+        console.log('Logged in successfully!');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      
-      <View style={styles.wrapper}>
-        <View 
-          style={styles.logoBlock}>
-            <Image 
-            source={require('../../assets/logo.png')}
-            style={styles.logo}
-            />
-        </View>
-        <TextInput
-          style={styles.input}
-          value={email}
-          placeholder="Enter email"
-          onChangeText={text => setEmail(text)}
-        />
-
-        <TextInput
-          style={styles.input}
-          value={password}
-          placeholder="Enter password"
-          onChangeText={text => setPassword(text)}
-          secureTextEntry
-        />
-
-        <Pressable 
-          style={styles.button} 
-          onPress={() => {
-            navigation.navigate('Home')
-          }}
-          >
-           <Text style={styles.text}>Login</Text>
-        </Pressable>
-      </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        onChangeText={setPassword}
+      />
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
 };
@@ -58,43 +47,18 @@ const LoginScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e6af7333'
-  },
-  wrapper: {
-    width: '80%',
+    alignItems: 'center',
+    padding: 16,
   },
   input: {
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: '#816362',
-    borderRadius: 5,
-    paddingHorizontal: 14,
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingLeft: 8,
   },
-  link: {
-    color: '#E6AF73',
-    fontWeight: '400'
-  },
-  button: {
-    backgroundColor: '#816362',
-    paddingVertical: 12,
-    borderRadius: 5
-  },
-  text: {
-    color: '#E6AF73',
-    fontWeight: '400',
-    textAlign: 'center'
-  },
-  logoBlock: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 80,
-    height: 100,
-    marginBottom: 24
-  }
 });
 
 export default LoginScreen;

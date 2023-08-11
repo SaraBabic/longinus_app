@@ -17,9 +17,8 @@ const BlogsScreen = ({navigation}) => {
   const [posts, setPosts] = useState([]);
 
   const getPosts = () => {
-    axios.get('https://5283-178-222-229-134.ngrok-free.app/api/blog')
+    axios.get('https://05f9-46-40-7-116.ngrok-free.app/api/blog')
         .then((json) => {
-          console.log(json.data);
           setPosts(json.data)
         });
     };
@@ -70,9 +69,10 @@ const BlogsScreen = ({navigation}) => {
                       <Text key={post.blog_title} style={styles.cardTitle}>{post.blog_title}</Text>
                       <Image
                       style={styles.cardImg}
+                      key={post.blog_image}
                       source={{
                         uri:
-                        'https://5283-178-222-229-134.ngrok-free.app' + `${post.blog_image}`,
+                        'https://05f9-46-40-7-116.ngrok-free.app' + `${post.blog_image}`,
                       }}
                     />
                       <Text key={post.nid} style={styles.description}>{post.blog_description.replace(regex, '')}</Text>
