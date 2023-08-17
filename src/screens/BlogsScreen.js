@@ -1,31 +1,31 @@
-import React from 'react';
-import {Text, 
-        View,
-        StyleSheet,
-        Pressable,
-        Image,
-        navigation,
-        ScrollView
-} from 'react-native';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Pressable, Image, ScrollView } from 'react-native';
 import axios from 'axios';
 
-
-const BlogsScreen = ({navigation}) => {
+const BlogsScreen = ({ navigation }) => {
   const regex = /(<([^>]+)>)/ig;
   const [posts, setPosts] = useState([]);
 
   const getPosts = () => {
-    axios.get('https://05f9-46-40-7-116.ngrok-free.app/api/blog')
-        .then((json) => {
-          setPosts(json.data)
-        });
-    };
+    axios.get('https://54bd-46-40-7-116.ngrok-free.app/api/blog')
+      .then((json) => {
+        setPosts(json.data)
+      });
+  };
 
-    useEffect(() => {
-      getPosts();
-    },[])
+  const deletePost = (nid) => {
+    axios.post(`https://54bd-46-40-7-116.ngrok-free.app/blog/api/delete/${nid}`)
+      .then(() => {
+        getPosts(); // Refresh the list after deletion
+      })
+      .catch((error) => {
+        console.error('Error deleting post:', error);
+      });
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, [])
 
     return (
         <View style={styles.container}>
@@ -63,25 +63,27 @@ const BlogsScreen = ({navigation}) => {
 
 
               <ScrollView style={styles.scrollView}>
-              {posts.map((post) => {
-                return (
-                  <View style={styles.card}>
-                      <Text key={post.blog_title} style={styles.cardTitle}>{post.blog_title}</Text>
-                      <Image
-                      style={styles.cardImg}
-                      key={post.blog_image}
-                      source={{
-                        uri:
-                        'https://05f9-46-40-7-116.ngrok-free.app' + `${post.blog_image}`,
-                      }}
-                    />
-                      <Text key={post.nid} style={styles.description}>{post.blog_description.replace(regex, '')}</Text>
-                  </View>
-          
-                );  
-              }
-              )}
-              </ScrollView>
+        {posts.map((post) => (
+          <View style={styles.card} key={post.nid}>
+            <Text style={styles.cardTitle}>{post.blog_title}</Text>
+            <Image
+              style={styles.cardImg}
+              source={{
+                uri: 'https://54bd-46-40-7-116.ngrok-free.app' + `${post.blog_image}`,
+              }}
+            />
+            <Text style={styles.description}>{post.blog_description.replace(regex, '')}</Text>
+
+            <Pressable
+              style={styles.deleteButton}
+              onPress={() => deletePost(post.nid)}
+            >
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </Pressable>
+          </View>
+        ))}
+      </ScrollView>
+
               
             
           </View>
@@ -165,7 +167,23 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#816362',
         alignItems: 'center',
-      }
+      },
+      deleteButton: {
+        backgroundColor: '#ff0000',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        borderWidth: 2,
+        borderColor: '#816362',
+      },
+      deleteButtonText: {
+        color: '#000000',
+        fontWeight: '400',
+        fontSize: 16,
+      },
     
   });
 

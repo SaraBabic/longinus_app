@@ -32,7 +32,7 @@ const ShowsScreen = ({navigation}) => {
             <Pressable 
           style={styles.button} 
           onPress={() => {
-            navigation.navigate('Blogs')
+            navigation.navigate('AddShow')
           }}
           >
           <Image 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Pressable, BackHandler,
+  navigation, } from 'react-native';
 import axios from 'axios';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -39,7 +40,11 @@ const LoginScreen = () => {
         secureTextEntry
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleLogin} />
+      {/* <Button title="Login" onPress={handleLogin} /> */}
+      
+        <Button title="Login" onPress={() => {
+            navigation.navigate('Home')
+          }} />
     </View>
   );
 };
@@ -59,6 +64,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingLeft: 8,
   },
+  logout: {
+    alignItems: 'center',
+    marginVertical: 50,
+    color: '#000000'
+},
 });
 
 export default LoginScreen;

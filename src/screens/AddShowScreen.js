@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 
-const AddBlogScreen = () => {
+const AddShowScreen = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [field_city, setCity] = useState('');
+  const [field_country, setCountry] = useState('');
 
   const createBlog = async () => {
     try {
-      const response = await fetch('https://54bd-46-40-7-116.ngrok-free.app/blog/api/create', {
+      const response = await fetch('https://54bd-46-40-7-116.ngrok-free.app/shows/api/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, body }),
+        body: JSON.stringify({
+            title,
+            body,
+            field_city,
+            field_country,
+          }),
       });
 
       if (response.ok) {
         const responseData = await response.json();
         console.log(responseData.message); // Success message from Drupal
       } else {
-        console.log('Failed to create blog');
+        console.log('Failed to create show');
       }
     } catch (error) {
       console.error('Error creating blog:', error);
@@ -43,7 +50,23 @@ const AddBlogScreen = () => {
         placeholder="Enter body"
         multiline
       />
-      <Button title="Create Blog" onPress={createBlog} />
+
+<Text style={styles.label}>City:</Text>
+      <TextInput
+        style={styles.input}
+        value={field_city}
+        onChangeText={setCity}
+        placeholder="Enter city"
+      />
+      <Text style={styles.label}>Country:</Text>
+      <TextInput
+        style={styles.input}
+        value={field_country}
+        onChangeText={setCountry}
+        placeholder="Enter country"
+      />
+
+      <Button title="Create Show" onPress={createBlog} />
     </View>
   );
 };
@@ -63,12 +86,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  previewImage: {
-    width: 200,
-    height: 200,
-    marginTop: 10,
-    marginBottom: 20,
-  },
 });
 
-export default AddBlogScreen;
+export default AddShowScreen;

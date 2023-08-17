@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import BlogsScreen from '../screens/BlogsScreen';
 import ShowsScreen from '../screens/ShowsScreen';
 import AddBlogScreen from '../screens/AddBlogScreen';
+import AddShowScreen from '../screens/AddShowScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,8 @@ const Navigation = () => {
                 <Stack.Screen name="Home" component={HomeScreen}  options={{headerShown: false}}/>
                 <Stack.Screen name="Blogs" component={BlogsScreen}  options={{headerShown: false}} />
                 <Stack.Screen name="Shows" component={ShowsScreen}  options={{headerShown: false}} />
-                <Stack.Screen name="AddBlog" component={AddBlogScreen}  options={{headerShown: false}} />
+                <Stack.Screen name="AddBlog" component={AddBlogScreen} />
+                <Stack.Screen name="AddShow" component={AddShowScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
