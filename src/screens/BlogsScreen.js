@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Pressable, Image, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Pressable, Image, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+
 
 const BlogsScreen = ({ navigation }) => {
   const regex = /(<([^>]+)>)/ig;
   const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null); // Store the selected post for deletion
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const getPosts = () => {
     axios.get('https://54bd-46-40-7-116.ngrok-free.app/api/blog')
@@ -17,15 +20,22 @@ const BlogsScreen = ({ navigation }) => {
     axios.post(`https://54bd-46-40-7-116.ngrok-free.app/blog/api/delete/${nid}`)
       .then(() => {
         getPosts(); // Refresh the list after deletion
+        setModalVisible(false); // Close the modal
       })
       .catch((error) => {
         console.error('Error deleting post:', error);
       });
   };
 
+  const openModal = (nid) => {
+    setSelectedPost(nid);
+    setModalVisible(true);
+  };
+
   useEffect(() => {
     getPosts();
   }, [])
+
 
     return (
         <View style={styles.container}>
@@ -65,7 +75,7 @@ const BlogsScreen = ({ navigation }) => {
               <ScrollView style={styles.scrollView}>
         {posts.map((post) => (
           <View style={styles.card} key={post.nid}>
-            <Text style={styles.cardTitle}>{post.blog_title}</Text>
+          <Text style={styles.cardTitle}>{post.blog_title}</Text>
             <Image
               style={styles.cardImg}
               source={{
@@ -73,16 +83,41 @@ const BlogsScreen = ({ navigation }) => {
               }}
             />
             <Text style={styles.description}>{post.blog_description.replace(regex, '')}</Text>
-
             <Pressable
               style={styles.deleteButton}
-              onPress={() => deletePost(post.nid)}
+              onPress={() => openModal(post.nid)}
             >
-              <Text style={styles.deleteButtonText}>Delete</Text>
+              <Text style={styles.deleteButtonText}>Delete Blog</Text>
             </Pressable>
           </View>
         ))}
       </ScrollView>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Are you sure you want to delete this blog?</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => {
+                deletePost(selectedPost);
+              }}
+            >
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
               
             
@@ -169,7 +204,41 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       deleteButton: {
-        backgroundColor: '#ff0000',
+        backgroundColor: '#C14545',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+        borderWidth: 2,
+        borderColor: '#816362',
+        width: 100,
+      },
+      deleteButtonText: {
+        color: '#ffffff',
+        fontWeight: '400',
+        fontSize: 12,
+      },
+      modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+      },
+      modalText: {
+        fontSize: 18,
+        marginBottom: 20,
+        textAlign: 'center',
+      },
+      modalButton: {
+        backgroundColor: '#6FCC93',
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 5,
@@ -178,11 +247,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderWidth: 2,
         borderColor: '#816362',
+        width: 100,
       },
-      deleteButtonText: {
-        color: '#000000',
+      modalButtonText: {
+        color: '#ffffff',
         fontWeight: '400',
-        fontSize: 16,
+        fontSize: 12,
       },
     
   });
