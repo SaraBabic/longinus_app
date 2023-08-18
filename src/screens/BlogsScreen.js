@@ -10,14 +10,14 @@ const BlogsScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const getPosts = () => {
-    axios.get('https://54bd-46-40-7-116.ngrok-free.app/api/blog')
+    axios.get('https://ff82-46-40-7-116.ngrok-free.app/api/blog')
       .then((json) => {
         setPosts(json.data)
       });
   };
 
   const deletePost = (nid) => {
-    axios.post(`https://54bd-46-40-7-116.ngrok-free.app/blog/api/delete/${nid}`)
+    axios.post(`https://ff82-46-40-7-116.ngrok-free.app/blog/api/delete/${nid}`)
       .then(() => {
         getPosts(); // Refresh the list after deletion
         setModalVisible(false); // Close the modal
@@ -79,7 +79,7 @@ const BlogsScreen = ({ navigation }) => {
             <Image
               style={styles.cardImg}
               source={{
-                uri: 'https://54bd-46-40-7-116.ngrok-free.app' + `${post.blog_image}`,
+                uri: 'https://ff82-46-40-7-116.ngrok-free.app/' + `${post.blog_image}`,
               }}
             />
             <Text style={styles.description}>{post.blog_description.replace(regex, '')}</Text>

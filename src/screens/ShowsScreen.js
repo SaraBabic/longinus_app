@@ -9,14 +9,14 @@ const ShowsScreen = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const getShows = () => {
-    axios.get('https://54bd-46-40-7-116.ngrok-free.app/api/shows')
+    axios.get('https://ff82-46-40-7-116.ngrok-free.app/api/shows')
       .then((json) => {
         setShows(json.data)
       });
   };
 
   const deleteShow = (nid) => {
-    axios.post(`https://54bd-46-40-7-116.ngrok-free.app/show/api/delete/${nid}`)
+    axios.post(`https://ff82-46-40-7-116.ngrok-free.app/show/api/delete/${nid}`)
       .then(() => {
         getShows(); // Refresh the list after deletion
         setModalVisible(false); // Close the modal

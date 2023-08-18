@@ -20,8 +20,8 @@ const Navigation = () => {
                 <Stack.Screen name="Home" component={HomeScreen}  options={{headerShown: false}}/>
                 <Stack.Screen name="Blogs" component={BlogsScreen}  options={{headerShown: false}} />
                 <Stack.Screen name="Shows" component={ShowsScreen}  options={{headerShown: false}} />
-                <Stack.Screen name="AddBlog" component={AddBlogScreen} />
-                <Stack.Screen name="AddShow" component={AddShowScreen} />
+                <Stack.Screen name="AddBlog" component={AddBlogScreen}  options={{headerShown: false}} />
+                <Stack.Screen name="AddShow" component={AddShowScreen} options={{headerShown: false}} />
             </Stack.Navigator>
         </NavigationContainer>
     );

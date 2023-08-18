@@ -10,7 +10,7 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'https://05f9-46-40-7-116.ngrok-free.app/user/login?_format=json', // Replace with the correct endpoint
+        'https://ff82-46-40-7-116.ngrok-free.app/user/login?_format=json', // Replace with the correct endpoint
         {
           name: username,
           pass: password,
