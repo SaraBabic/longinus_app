@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 
@@ -8,7 +8,7 @@ function cropDate(originalDate) {
   return croppedDate;
 }
 
-const AddShowScreen = ({ navigation }) => {
+const AddShowScreen = ({ navigation, route }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [field_city, setCity] = useState('');
@@ -16,16 +16,18 @@ const AddShowScreen = ({ navigation }) => {
   const [message, setMessage] = useState('');
   const [field_date, setStart] = useState(new Date(1598051730000));
   const [field_end_date, setEnd] = useState(new Date(1598051730000));
+  const {  token, logout, username  } = route.params;
 
 
   const createShow = async () => {
     try {
       const croppedStartDate = cropDate(field_date);
       const croppedEndDate = cropDate(field_end_date);
-      const response = await fetch('https://ff82-46-40-7-116.ngrok-free.app/shows/api/create', {
+      const response = await fetch('https://sara.stud.vts.su.ac.rs/shows/api/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-Token': token,
         },
         body: JSON.stringify({
           title,
@@ -96,7 +98,7 @@ const AddShowScreen = ({ navigation }) => {
         <Pressable
           style={styles.back}
           onPress={() => {
-            navigation.navigate('Shows');
+            navigation.navigate('Shows', { token, logout, username });
           }}
         >
           <Image source={require('../../assets/back.png')} style={styles.icon} />
@@ -112,7 +114,7 @@ const AddShowScreen = ({ navigation }) => {
           onChangeText={setTitle}
           placeholder="Enter title"
         />
-        <Text style={styles.label}>Body:</Text>
+        <Text style={styles.label}>Description:</Text>
         <TextInput
           style={styles.input}
           value={body}

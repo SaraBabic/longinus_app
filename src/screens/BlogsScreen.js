@@ -3,21 +3,22 @@ import { Text, View, StyleSheet, Pressable, Image, ScrollView, Modal, TouchableO
 import axios from 'axios';
 
 
-const BlogsScreen = ({ navigation }) => {
+const BlogsScreen = ({ navigation, route }) => {
+  const {  token, logout, username  } = route.params;
   const regex = /(<([^>]+)>)/ig;
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null); // Store the selected post for deletion
   const [isModalVisible, setModalVisible] = useState(false);
 
   const getPosts = () => {
-    axios.get('https://ff82-46-40-7-116.ngrok-free.app/api/blog')
+    axios.get('https://sara.stud.vts.su.ac.rs/api/blog')
       .then((json) => {
         setPosts(json.data)
       });
   };
 
   const deletePost = (nid) => {
-    axios.post(`https://ff82-46-40-7-116.ngrok-free.app/blog/api/delete/${nid}`)
+    axios.post(`https://sara.stud.vts.su.ac.rs/blog/api/delete/${nid}`)
       .then(() => {
         getPosts(); // Refresh the list after deletion
         setModalVisible(false); // Close the modal
@@ -45,7 +46,7 @@ const BlogsScreen = ({ navigation }) => {
               <Pressable 
                 style={styles.back} 
                 onPress={() => {
-                  navigation.navigate('Home')
+                  navigation.navigate('Home', { token, logout, username })
                 }}
                 >
                 <Image 
@@ -61,7 +62,7 @@ const BlogsScreen = ({ navigation }) => {
                   <Pressable 
                 style={styles.button} 
                 onPress={() => {
-                  navigation.navigate('AddBlog')
+                  navigation.navigate('AddBlog', { token, logout, username })
                 }}
                 >
                 <Image 
@@ -79,7 +80,7 @@ const BlogsScreen = ({ navigation }) => {
             <Image
               style={styles.cardImg}
               source={{
-                uri: 'https://ff82-46-40-7-116.ngrok-free.app/' + `${post.blog_image}`,
+                uri: 'https://sara.stud.vts.su.ac.rs/' + `${post.blog_image}`,
               }}
             />
             <Text style={styles.description}>{post.blog_description.replace(regex, '')}</Text>

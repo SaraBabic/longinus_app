@@ -2,21 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Pressable, Image, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
-const ShowsScreen = ({navigation}) => {
+function cropDate(originalDate) {
+  const dateObj = new Date(originalDate);
+  const croppedDate = dateObj.toISOString().split('T')[0];
+  return croppedDate;
+}
+
+const ShowsScreen = ({navigation, route}) => {
+  const {  token, logout, username  } = route.params;
   const regex = /(<([^>]+)>)/ig;
   const [posts, setShows] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null); // Store the selected post for deletion
   const [isModalVisible, setModalVisible] = useState(false);
 
   const getShows = () => {
-    axios.get('https://ff82-46-40-7-116.ngrok-free.app/api/shows')
+    axios.get('https://sara.stud.vts.su.ac.rs/api/shows')
       .then((json) => {
         setShows(json.data)
       });
   };
 
   const deleteShow = (nid) => {
-    axios.post(`https://ff82-46-40-7-116.ngrok-free.app/show/api/delete/${nid}`)
+    axios.post(`https://sara.stud.vts.su.ac.rs/show/api/delete/${nid}`)
       .then(() => {
         getShows(); // Refresh the list after deletion
         setModalVisible(false); // Close the modal
@@ -43,7 +50,7 @@ const ShowsScreen = ({navigation}) => {
         <Pressable 
           style={styles.back} 
           onPress={() => {
-            navigation.navigate('Home')
+            navigation.navigate('Home', { token, logout, username })
           }}
           >
           <Image 
@@ -59,7 +66,7 @@ const ShowsScreen = ({navigation}) => {
             <Pressable 
           style={styles.button} 
           onPress={() => {
-            navigation.navigate('AddShow')
+            navigation.navigate('AddShow', { token, logout, username })
           }}
           >
           <Image 
@@ -95,14 +102,14 @@ const ShowsScreen = ({navigation}) => {
                 source={require('../../assets/start-date.png')}
                 style={styles.smallIcon}
                 />
-              <Text style={styles.description}>{post.start_date}</Text>
+              <Text style={styles.description}>{cropDate(post.start_date)}</Text>
             </View>
             <View style={styles.next}>
             <Image 
               source={require('../../assets/end-date.png')}
               style={styles.smallIcon}
               />
-            <Text style={styles.description}>{post.end_date}</Text>
+            <Text style={styles.description}>{cropDate(post.end_date)}</Text>
             </View>
           </View>
             <Pressable
